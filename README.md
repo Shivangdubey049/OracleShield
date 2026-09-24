@@ -1,246 +1,650 @@
-# OracleShield
+# 🛡️ OracleShield
 
-### AI-Based Network Attack Forecasting with Progressive World Models
+### AI-Powered Network Attack Detection, Forecasting & Security Audit
 
-**SIH26153 · National Technical Research Organisation (NTRO)**
+<p align="center">
+  <b>OracleShield</b> is a predictive cybersecurity platform built for <b>SIH 2026 — Problem Statement 26153</b>.
+  <br/>
+  It combines machine-learning detection, temporal network-state modelling, forward threat forecasting,
+  MITRE ATT&CK mapping, threat memory, explainability, and tamper-evident security auditing in one SOC-oriented dashboard.
+</p>
 
-OracleShield is a prototype for proactive cyber defence that moves beyond
-isolated intrusion classification. It represents network traffic as
-evolving state windows, learns temporal state-transition dynamics, performs
-forward reasoning about attacker progression, maintains adaptive threat
-memory, and records security decisions in a tamper-evident audit ledger.
+<p align="center">
+  <a href="https://oracleshield.streamlit.app/">
+    <img src="https://img.shields.io/badge/🚀_Live_Demo-OracleShield-FF4B4B?style=for-the-badge" alt="Live Demo">
+  </a>
+  <a href="https://github.com/Shivangdubey049/OracleShield">
+    <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github" alt="GitHub">
+  </a>
+</p>
 
-> **Traditional IDS:** What attack is happening now?
->
-> **OracleShield:** Given the network state now, where is the threat likely
-> to move next?
+---
 
-## Architecture
+## 🎯 The Idea
+
+Traditional intrusion detection generally answers:
+
+> **“What is happening right now?”**
+
+OracleShield is designed to additionally ask:
+
+> **“Given the current network state, how could the threat evolve next?”**
+
+The system converts network observations into structured state representations, detects the current threat, models temporal behaviour, performs forward simulation, estimates progression risk, maps the result to security context, and records important events for audit.
+
+### Core security loop
+
+**Detect → Understand → Forecast → Explain → Audit**
+
+---
+
+## ✨ Key Capabilities
+
+| Capability | What OracleShield does |
+|---|---|
+| 🔍 **AI Detection** | Random Forest-based classification of normal and network attack traffic |
+| 🧠 **World Model** | Temporal modelling of network-state transitions using neural sequence models |
+| 🔮 **Forward Forecasting** | Autoregressive multi-step rollout of possible future network states |
+| 📈 **Risk Estimation** | Combines current threat information with forecasting signals to estimate progression risk |
+| 🧬 **Threat Memory** | Maintains state prototypes, transitions, novelty and drift information |
+| 🎯 **MITRE ATT&CK** | Maps detected behaviour to ATT&CK-oriented techniques/stages and defensive context |
+| 💡 **Explainability** | Exposes state-feature drivers and SHAP-based detector evidence |
+| 🔐 **Security Audit** | Cryptographically links security records and supports integrity/tamper verification |
+| 🖥️ **SOC Dashboard** | Streamlit interface for detection, forecasting, evidence and audit workflows |
+| 📡 **Network Telemetry** | Supports flow/packet-oriented processing, replay and PCAP-oriented workflows |
+| 🔄 **Adaptive Memory** | Tracks changing network behaviour while keeping model adaptation controlled |
+
+---
+
+## 🏗️ Architecture
 
 ```text
-Network Traffic
-      |
-      v
-Network State S_t
-      |
-      +------------------+
-      |                  |
-      v                  v
-RandomForest        LSTM World Model
-Detection           P(S_t+1 | S_t...)
-      |                  |
-      +--------+---------+
-               v
-      Forward State Rollout
-               |
-               v
-   Progression / Risk Estimate
-               |
-      +--------+---------+
-      |                  |
-      v                  v
-MITRE ATT&CK stage   Explainability
-      |                  |
-      +--------+---------+
-               v
-      SHA-256 Audit Chain
-               |
-               v
-       Streamlit SOC UI
+                         ┌──────────────────────────┐
+                         │     NETWORK TELEMETRY    │
+                         │  Live / PCAP / Flow Data │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                         ┌──────────────────────────┐
+                         │   PREPROCESSING ENGINE   │
+                         │ Cleaning • Scaling •      │
+                         │ Feature / State Encoding │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                         ┌──────────────────────────┐
+                         │    DETECTION ENGINE      │
+                         │     Random Forest        │
+                         │ Normal / DoS / Probe /   │
+                         │ R2L / U2R                │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                    ┌──────────────────────────────────┐
+                    │       TEMPORAL WORLD MODEL       │
+                    │   LSTM / Transformer support     │
+                    │                                  │
+                    │  State t → State t+1 → ... → t+n│
+                    └────────────────┬─────────────────┘
+                                     │
+                                     ▼
+                         ┌──────────────────────────┐
+                         │   FORECAST & RISK LAYER  │
+                         │ Progression • Confidence │
+                         │ Novelty • Drift • Risk   │
+                         └────────────┬─────────────┘
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    ▼                 ▼                 ▼
+          ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+          │ Threat Memory  │ │ MITRE ATT&CK   │ │ Explainability │
+          │ State History  │ │ Mapping /      │ │ SHAP + Feature │
+          │ & Transitions  │ │ Playbooks      │ │ Drivers        │
+          └────────┬───────┘ └───────┬────────┘ └───────┬────────┘
+                   └─────────────────┼──────────────────┘
+                                     ▼
+                         ┌──────────────────────────┐
+                         │       AUDIT LEDGER       │
+                         │ Hashing • Integrity •    │
+                         │ Tamper Verification     │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                         ┌──────────────────────────┐
+                         │       SOC DASHBOARD      │
+                         │ Detect → Forecast →      │
+                         │ Explain → Audit          │
+                         └──────────────────────────┘
 ```
 
-## What the current prototype does
+---
 
-- Uses the supplied combined NSL-KDD workbook as the primary prototype data.
-- Preserves train/test membership using the `split` column.
-- Uses a RandomForest as the detection/baseline layer.
-- Builds 16-dimensional network-state vectors over traffic windows.
-- Trains an LSTM to predict the next state and attack-stage distribution.
-- Performs forward risk estimation from observed state, drift and novelty.
-- Maintains persistent threat-memory prototypes for recurring trajectories.
-- Maps prototype attack categories to high-level ATT&CK stages.
-- Stores non-benign security events in a SHA-256 hash-chained ledger.
-- Includes a live tamper demonstration in the Streamlit interface.
+## 🧠 How the Forecasting Works
 
-## Dataset provenance
+OracleShield does not stop at a classification result.
 
-Current workbook:
+For a sequence of network states:
 
-`Copy of DOC-20260825-WA0002.xlsx`
+```text
+Sₜ → Sₜ₊₁ → Sₜ₊₂ → Sₜ₊₃ → ...
+```
 
-Prototype size:
+the World Model learns temporal relationships and predicts the next state.
 
-- 148,517 records
-- 125,973 train
-- 22,544 test
+The forecast can then be rolled forward:
 
-The original train/test membership is preserved in `split`.
+```text
+Current State
+     │
+     ▼
+Predict Next State
+     │
+     ▼
+Feed Prediction Back
+     │
+     ▼
+Predict Future State
+     │
+     ▼
+Repeat for Multiple Steps
+     │
+     ▼
+Progression / Risk Estimate
+```
 
-## Current detector evidence
+This enables OracleShield to represent a threat as an **evolving process**, rather than treating every network observation as an isolated event.
 
-The supplied prototype evaluation reports approximately **73.67% accuracy**
-on the difficult test setting. OracleShield exposes macro precision, macro
-recall, macro F1 and per-class metrics so accuracy is not presented in
-isolation on this imbalanced intrusion-detection problem.
+---
 
-## Installation
+## 🧪 Detection Layer
 
-Python 3.10+ is recommended.
+The current detection workflow supports the following categories:
+
+- `normal`
+- `DoS`
+- `Probe`
+- `R2L`
+- `U2R`
+
+The dashboard exposes more than a single accuracy value, including:
+
+- Accuracy
+- Macro Precision
+- Macro Recall
+- Macro F1
+- Weighted F1
+- Per-class precision / recall / F1
+- Train/test class distribution
+
+The current prototype uses an NSL-KDD-based dataset containing **148,517 records**, while preserving the original train/test membership.
+
+---
+
+## 🔮 Temporal World Model
+
+OracleShield includes a temporal modelling layer for network-state forecasting.
+
+### Supported modelling approach
+
+- LSTM-based state-transition modelling
+- Transformer / multi-head self-attention support in the implementation
+- Sequence-based state windows
+- Next-state prediction
+- Attack-stage prediction
+- Multi-step autoregressive rollout
+- Cumulative progression-risk estimation
+
+The goal is to move from:
+
+```text
+Attack Detected
+```
+
+toward:
+
+```text
+Attack Detected
+      ↓
+Current Network State
+      ↓
+Behavioural Change
+      ↓
+Possible Next State
+      ↓
+Future Progression Risk
+```
+
+---
+
+## 🎯 MITRE ATT&CK Integration
+
+OracleShield includes a MITRE-oriented security context layer.
+
+The implementation exposes technique information such as:
+
+- Technique ID
+- Technique name
+- Tactic
+- Description
+- Recommended automated action
+- Mitigation / playbook context
+
+Example technique mappings represented by the current implementation include:
+
+| Technique | Context |
+|---|---|
+| `T1046` | Network Service Scanning |
+| `T1498` | Network Denial of Service |
+| `T1110` | Brute Force |
+| `T1041` | Exfiltration Over C2 Channel |
+
+> **Important:** MITRE mappings should be interpreted according to the evidence available from the underlying telemetry. Dataset attack labels are not automatically equivalent to ground-truth ATT&CK technique IDs.
+
+---
+
+## 🧬 Threat Memory
+
+OracleShield maintains behavioural memory instead of treating every observation independently.
+
+The memory layer can track:
+
+- Persistent network-state prototypes
+- State transitions
+- Novelty
+- Behavioural drift
+- Historical threat context
+- Adaptive state information
+
+This helps the system distinguish between familiar behaviour and behaviour that is changing or becoming unusual.
+
+---
+
+## 💡 Explainability
+
+A cybersecurity model is more useful when analysts can understand **why** an alert was produced.
+
+OracleShield exposes:
+
+- Network-state feature drivers
+- Detector evidence
+- SHAP-based explanations
+- Predicted attack category
+- Risk/progression information
+- MITRE-oriented security context
+
+The objective is to give analysts evidence alongside the prediction rather than presenting an unexplained score.
+
+---
+
+## 🔐 Security Audit & Integrity
+
+Security decisions need an auditable trail.
+
+OracleShield records security events using cryptographic integrity mechanisms.
+
+The audit workflow supports:
+
+```text
+Security Event
+      ↓
+Cryptographic Record
+      ↓
+Previous-Record Link
+      ↓
+Integrity Verification
+      ↓
+Tamper Detection
+```
+
+The current implementation also includes a controlled tamper-simulation workflow and multi-node ledger/consensus components.
+
+> **Prototype note:** The audit layer is intended to demonstrate tamper-evident security logging and distributed-ledger concepts. Production deployment would require hardened infrastructure, key management, node identity, persistent storage, and operational security controls.
+
+---
+
+## 🖥️ Dashboard
+
+The Streamlit application is organized around security operations workflows including:
+
+### 🚨 Command Center
+Real-time/replayed telemetry, detection metrics, current threat state, progression risk and network defence status.
+
+### 🧠 World Model
+Network-state dynamics, temporal model information, next-state prediction and forecasting metrics.
+
+### 🔐 Blockchain Audit
+Security-event records, cryptographic integrity checks and tamper simulation.
+
+### 📊 Evidence & Data
+Detection metrics, per-class results, train/test distribution, MITRE technique information and implementation coverage.
+
+---
+
+## 📊 Prototype Evaluation
+
+The current prototype exposes evaluation metrics directly in the dashboard rather than relying only on a headline accuracy figure.
+
+Reported evaluation includes:
+
+- Detection accuracy
+- Macro precision
+- Macro recall
+- Macro F1
+- Weighted F1
+- Per-class metrics
+- World-model metrics
+- Next-state prediction error
+
+The NSL-KDD-based prototype currently contains **148,517 records** and reports approximately **73.7% detection accuracy** on the difficult evaluation setting used by the project.
+
+> Metrics are dataset- and evaluation-setting-specific. They should not be interpreted as real-world SOC detection rates.
+
+---
+
+## ⚠️ Research & Dataset Limitation
+
+A major limitation is intentionally documented rather than hidden:
+
+**NSL-KDD does not provide genuine timestamped packet telemetry for learning real chronological attacker progression.**
+
+Therefore, temporal ordering in the current prototype is used as a reproducible modelling setup.
+
+For stronger real-world forecasting, the next evaluation stage should use timestamped network telemetry such as:
+
+- CIC-IDS2018
+- CTU-13
+- PCAP-derived traffic
+- Flow records with real timestamps
+
+This would allow the forecasting layer to learn richer temporal signals such as:
+
+- Inter-arrival timing
+- TCP behaviour
+- Retransmissions
+- Flow duration
+- Traffic bursts
+- Real attack timelines
+
+---
+
+## 🚀 Quick Start
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Shivangdubey049/OracleShield.git
+cd OracleShield
+```
+
+### 2. Create a virtual environment
+
+#### Windows
 
 ```bash
 python -m venv .venv
-```
-
-Windows:
-
-```bash
 .venv\Scripts\activate
 ```
 
-macOS/Linux:
+#### Linux / macOS
 
 ```bash
+python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Install dependencies:
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Place the combined workbook and trained detector artifacts in the project
-root:
+### 4. Launch the Streamlit application
+
+```bash
+streamlit run app.py
+```
+
+Then open the local URL shown by Streamlit, usually:
+
+```text
+http://localhost:8501
+```
+
+> If your local checkout uses a different Streamlit entry file, run the project's configured application entry point instead.
+
+---
+
+## 🌐 Live Demo
+
+Try the deployed prototype:
+
+**https://oracleshield.streamlit.app/**
+
+The dashboard is designed to demonstrate the complete security workflow:
+
+```text
+Telemetry
+   ↓
+Detection
+   ↓
+Threat Understanding
+   ↓
+Forecasting
+   ↓
+MITRE / Explainability
+   ↓
+Audit
+```
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Language | Python |
+| Web / SOC UI | Streamlit |
+| Classical ML | scikit-learn |
+| Detection Model | Random Forest |
+| Temporal AI | PyTorch LSTM |
+| Attention Model | Multi-Head Self-Attention Transformer support |
+| Data Processing | Pandas, NumPy |
+| Explainability | SHAP |
+| Network Capture | Scapy / tshark-oriented workflows |
+| Flow Processing | Flow tracking / state encoding |
+| Security Context | MITRE ATT&CK |
+| Audit | Cryptographic hashing / ledger components |
+| Visualization | Streamlit charts / Plotly-oriented dashboard components |
+
+---
+
+## 📁 Repository Concept
+
+The project is organized around the following logical components:
 
 ```text
 OracleShield/
-├── app_oracleshield_progressive.py
-├── oracle_shield_world_model.py
-├── train_world_model.py
-├── preprocess.py
-├── requirements.txt
-├── Copy of DOC-20260825-WA0002.xlsx
-├── model_classifier.joblib
-├── scaler.joblib
-└── feature_columns.joblib
+│
+├── Application / Streamlit UI
+├── Detection Engine
+├── Preprocessing & State Encoding
+├── World Model
+├── Forecast / Rollout Engine
+├── Threat Memory
+├── MITRE Mapping
+├── Explainability
+├── Audit / Ledger
+├── Data & Model Artifacts
+├── Documentation
+└── Configuration / Requirements
 ```
 
-## Train the World Model
+The exact file layout may evolve as the implementation develops.
 
-```bash
-python train_world_model.py --data "Copy of DOC-20260825-WA0002.xlsx"
-```
+---
 
-This generates:
-
-- `world_model.pt`
-- `world_model_meta.json`
-
-Then launch:
-
-```bash
-streamlit run app_oracleshield_progressive.py
-```
-
-Open the local Streamlit URL shown in the terminal.
-
-## Dashboard workspaces
-
-### Command Center
-Replays traffic windows and shows attack pressure, progression probability,
-predicted stage, novelty, drift, memory match and recent security events.
-
-### World Model
-Shows the state representation, model status and progressive learning loop.
-
-### Blockchain Audit
-Displays the hash-chained ledger, integrity status and a judge-ready tamper
-simulation.
-
-### Evidence & Data
-Shows detector metrics, class distributions and requirement coverage.
-
-## Progressive learning: what it really means
-
-OracleShield intentionally does **not** train the classifier on its own
-predictions. Doing so would allow a wrong prediction to become its own
-future training label.
-
-Instead, adaptation occurs through:
+## 🔄 End-to-End Workflow
 
 ```text
-observation
-   -> state update
-   -> novelty / drift measurement
-   -> persistent trajectory memory
-   -> transition statistics
-   -> future comparison
+        ┌───────────────┐
+        │ Network Data  │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │ Preprocessing │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │ 16-D Network  │
+        │ State Vector  │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │ Random Forest │
+        │   Detection   │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │ World Model   │
+        │ LSTM / Trans. │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │ Multi-Step    │
+        │ Forward Roll  │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │ Risk + Stage  │
+        │  Forecasting  │
+        └───────┬───────┘
+                ↓
+   ┌────────────┼────────────┐
+   ↓            ↓            ↓
+Threat       MITRE       Explainability
+Memory       ATT&CK       / SHAP
+   └────────────┼────────────┘
+                ↓
+        ┌───────────────┐
+        │ Audit Ledger  │
+        └───────┬───────┘
+                ↓
+        ┌───────────────┐
+        │ SOC Dashboard │
+        └───────────────┘
 ```
 
-A production autonomous learning loop should add:
+---
 
-```text
-new observation
-   -> novelty detection
-   -> shadow learner
-   -> analyst / ground-truth verification
-   -> replay buffer
-   -> drift test
-   -> retraining
-   -> validation gate
-   -> model promotion
-```
+## 🧪 Development Roadmap
 
-## Important research limitation
+### Current / Prototype
 
-NSL-KDD does not provide the timestamped packet/PCAP telemetry described
-by the full SIH problem statement. Therefore this prototype must not claim
-that it has learned real packet-level causal attacker progression from
-NSL-KDD alone.
+- [x] ML-based network attack detection
+- [x] Network-state representation
+- [x] Temporal world-model architecture
+- [x] Forward simulation / rollout
+- [x] Threat memory
+- [x] MITRE ATT&CK integration
+- [x] Explainability layer
+- [x] Security-event auditing
+- [x] Streamlit SOC dashboard
+- [x] Evidence and evaluation dashboard
 
-For the final NTRO-grade benchmark, use timestamped telemetry such as
-CIC-IDS2018, CTU-13, CICIoT2023 or PCAP-derived data and add:
+### Next
 
-- inter-arrival timing
-- TTL and variance
-- TCP window statistics
-- retransmissions
-- sequential/randomised port-scan behaviour
-- flow duration and bidirectional ratios
-- real chronological attack timelines
+- [ ] Large-scale timestamped network telemetry
+- [ ] Stronger chronological forecasting validation
+- [ ] Expanded PCAP/live-flow evaluation
+- [ ] Analyst-verified adaptive learning
+- [ ] Shadow-model evaluation and gated model promotion
+- [ ] Richer ATT&CK technique evidence
+- [ ] Production-grade distributed audit deployment
+- [ ] Continuous monitoring and deployment automation
 
-## Blockchain positioning
+---
 
-The current ledger is a **permissioned-style local hash chain** for
-tamper-evident security auditing. It is not a public blockchain, mining
-system, cryptocurrency or multi-node consensus network.
+## 🔬 Research Direction
 
-A production deployment can extend this layer across trusted security nodes
-with access control and consensus.
+OracleShield is based around a simple research direction:
 
-## MITRE ATT&CK positioning
+> **Network security should move from detecting isolated events toward modelling how network behaviour evolves over time.**
 
-The supplied NSL-KDD categories do not contain native MITRE technique IDs.
-The prototype therefore uses a transparent high-level mapping:
+The project therefore combines four complementary ideas:
 
-| Prototype category | Stage |
-|---|---|
-| probe | Reconnaissance |
-| r2l | Initial Access |
-| u2r | Privilege Escalation |
-| dos | Impact / Disruption |
-| normal | No active stage |
+**Detection**
+→ What is happening?
 
-The final system should map richer telemetry to actual ATT&CK techniques
-with evidence rather than treating this heuristic mapping as ground truth.
+**Memory**
+→ Have we seen similar behaviour?
 
-## Repository hygiene
+**Forecasting**
+→ How could the current state evolve?
 
-Dataset files and trained binary artifacts are excluded from Git by design.
-This keeps the public source repository lightweight and prevents accidental
-publication of large data/model files.
+**Audit**
+→ Can the security decision and evidence be verified later?
 
-## License
+---
 
-Add the license required by your SIH/team submission policy before public
-distribution.
+## 🏆 SIH 2026
+
+**Problem Statement:** `SIH26153`
+
+**Title:**  
+**AI based Network Attack Forecasting from Network Traffic Data**
+
+**Team:** CyberOracle
+
+**Project:** OracleShield
+
+OracleShield was developed as a Smart India Hackathon 2026 solution focused on proactive network defence through AI-based attack forecasting.
+
+---
+
+## 📚 References
+
+The project research and presentation reference work around:
+
+- Network attack prediction and stream analytics
+- Cyberattack development forecasting using Markov models
+- Network intrusion detection architectures
+- MITRE Enterprise ATT&CK threat modelling
+- Kitsune online network intrusion detection
+- KDD Cup 99 / NSL-KDD intrusion-detection datasets
+
+Additional research material and project documentation are maintained with the project resources.
+
+---
+
+## ⚖️ Disclaimer
+
+OracleShield is a research/prototype cybersecurity project.
+
+It is **not** a replacement for a production SOC, EDR, SIEM, IDS/IPS, firewall, or incident-response process.
+
+Model outputs are probabilistic and depend on the quality, distribution and temporal characteristics of the input telemetry.
+
+The project should be evaluated and hardened with representative timestamped network data before being used for operational security decisions.
+
+---
+
+## 👥 Team
+
+### CyberOracle
+
+**OracleShield — AI-Based Network Attack Forecasting**
+
+Built for **Smart India Hackathon 2026 · PS 26153**
+
+---
+
+<p align="center">
+  <b>Don't just detect the attack.</b><br/>
+  <b>Forecast where it goes next. 🛡️</b>
+</p>
+
+<p align="center">
+  <a href="https://oracleshield.streamlit.app/">Live Demo</a>
+  •
+  <a href="https://github.com/Shivangdubey049/OracleShield">GitHub</a>
+</p>
