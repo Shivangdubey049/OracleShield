@@ -3,7 +3,7 @@
 ### AI-Powered Network Attack Detection, Forecasting & Security Audit
 
 <p align="center">
-  <b>OracleShield</b> is a predictive cybersecurity platform built for <b>SIH 2026 — Problem Statement 26153</b>.
+  <b>OracleShield</b> is a predictive cybersecurity platform.
   <br/>
   It combines machine-learning detection, temporal network-state modelling, forward threat forecasting,
   MITRE ATT&CK mapping, threat memory, explainability, and tamper-evident security auditing in one SOC-oriented dashboard.
@@ -586,21 +586,6 @@ The project therefore combines four complementary ideas:
 
 ---
 
-## 🏆 SIH 2026
-
-**Problem Statement:** `SIH26153`
-
-**Title:**  
-**AI based Network Attack Forecasting from Network Traffic Data**
-
-**Team:** CyberOracle
-
-**Project:** OracleShield
-
-OracleShield was developed as a Smart India Hackathon 2026 solution focused on proactive network defence through AI-based attack forecasting.
-
----
-
 ## 📚 References
 
 The project research and presentation reference work around:
@@ -633,8 +618,6 @@ The project should be evaluated and hardened with representative timestamped net
 ### CyberOracle
 
 **OracleShield — AI-Based Network Attack Forecasting**
-
-Built for **Smart India Hackathon 2026 · PS 26153**
 
 ---
 
